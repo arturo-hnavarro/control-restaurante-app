@@ -43,10 +43,6 @@
                         mostrarMenu(response.d);
                     else
                         alert('PROBLEMAS AL CARGAR EL MENÚ');
-
-                    //Aqui se debe llenar la informacion del div que esta arriba en la linea 14
-                    //Deberia llenarse y luego con el append (igual que el curso de fundamentos de web agregarlo al html)
-                    //El response trae una lista, entonces se puede recorrer con un ciclo e ir agregando
                 }
             });
         }

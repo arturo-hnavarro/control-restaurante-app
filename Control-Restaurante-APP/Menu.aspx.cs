@@ -14,6 +14,8 @@ namespace Control_Restaurante_APP.Views
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Coleccion de postman
+            //https://www.getpostman.com/collections/48395e5de468bd79b734
             CargarMenu();
         }
 
@@ -33,9 +35,6 @@ namespace Control_Restaurante_APP.Views
             {
                 return null;
             }
-            //Dependiendo el metodo aquí se cambia el endpoint "api/menu"
-            //TODO: cambiar al tipo de respuesta de la api. En nuestro caso una lista de platillos
-            //return result.Content.ReadAsAsync<OMG.Model.Response.ManualAssignResponse>().Result.
         }
 
     }
