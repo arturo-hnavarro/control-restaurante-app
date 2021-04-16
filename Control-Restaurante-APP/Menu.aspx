@@ -17,11 +17,30 @@
     Un ejemplo se puede ver aqui https://getbootstrap.com/docs/4.6/components/card/#using-grid-markup    
     -->
     <div class="mx-auto">
-        <div>
-            <h1>Menú</h1>
-        </div>
-        <div>
-            <div id="menu" class="row">
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                        <h2>Menú</h2>
+                    </a>
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <!--<li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+                        <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+                        <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+                        <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+                        <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
+                    </ul>
+
+                    <div class="text-end">
+                        <button type="button" class="btn btn-outline-light me-2">Ver Orden</button>
+                        <button type="button" class="btn btn-warning">Ordenar</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div id="menu" class="row ">
             </div>
         </div>
     </div>
@@ -31,7 +50,7 @@
     <script type="text/javascript">
 
         window.onload = cargarMenu();
-
+        
 
         function cargarMenu() {
             $.ajax({
@@ -49,12 +68,13 @@
 
         function mostrarMenu(response) {
             let menuBody = '';
-
+            
             for (var i = 0; i < response.length; i++) {
                 let platillo = obtenerPlatilloTemplate();
                 platillo = platillo.replace("[[TIPO_PLATILLO]]", response[i].tipoPlato.nombre);
                 platillo = platillo.replace("[[NOMBRE_PLATILLO]]", response[i].nombre);
-                platillo = platillo.replace("[[IMAGEN]]", response[i].image);
+                platillo = platillo.replace("[[IMAGEN]]", "data:image/jpg;base64," + response[i].image);
+                platillo = platillo.replace("[[PRECIO_PLATILLO]]", "¢" + response[i].precio);
                 var listaIngredientes = "";
                 for (var j = 0; j < response[i].ingredientes.length; j++) {
                     listaIngredientes += response[i].ingredientes[j].nombre.replace(".", "");
@@ -72,14 +92,15 @@
         }
 
         function obtenerPlatilloTemplate() {
-            var template = '<div class="col-sm-4 p-2 " >';
+            var template = '<div class="col-sm-6 p-2 ">';
             template += '<div class="card bg-light justify-content-start">';
             template += '<div class="card-body">';
             template += '<h6 class="">[[TIPO_PLATILLO]]</h6>';
             template += '<h5 class="card-title">[[NOMBRE_PLATILLO]]</h5>';
-            template += '<h6 class="col-sm-3">Ingredientes</h6>';
+            template += '<h5 class="card-tilte">[[PRECIO_PLATILLO]]</h5>';
+            template += '<h6 class="col-sm-4">Ingredientes</h6>';
             template += '<p class="card-text">[[INGREDIENTES]]</p>';
-            template += '<div class="p-2 " ><img src="[[IMAGEN]]"  width="230px" height="200px"></div>';
+            template += '<div class="p-2 " ><img src="[[IMAGEN]]" alt="Imagén del platillo" width="80%" height="80%"></div>';
             template += '<a href="#" class="btn btn-primary">Agregar al carrito</a>';
             template += '</div>';
             template += '</div>';

@@ -28,7 +28,11 @@ namespace Control_Restaurante_APP.Views
                 {
                     client.BaseAddress = new Uri(ConfigurationManager.AppSettings["restaurante-api"]);
                     var result = client.GetAsync("api/menu").Result;
-                    return result.Content.ReadAsAsync<List<Platillo>>().Result;
+                    List<Platillo>  platillos = result.Content.ReadAsAsync<List<Platillo>>().Result;
+                    
+                    platillos.ForEach(x => x.image = Convert.ToBase64String(x.imageInBytes));
+                    platillos.ForEach(x => x.imageInBytes = null);
+                    return platillos;
                 }
             }
             catch (Exception ex)
