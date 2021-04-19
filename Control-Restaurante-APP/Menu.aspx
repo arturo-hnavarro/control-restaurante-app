@@ -71,7 +71,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="alertaModalBody">
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
@@ -100,6 +99,38 @@
         var LocalStorageCarrito = 'carrito';
 
         window.onload = cargarMenu();
+
+        //Para hacer post a archivo .aspx.cs
+
+        //update
+        $("body").on("click", "#btnUpdateReason", function (e) {
+
+            var jsonText = JSON.stringify({
+                pkReason: $('#reasonId').val(),
+                internalName: $('#reasonInternalName').val(),
+                descriptionSPA: $('#reasonDescriptionSpa').val(),
+                descriptionENG: $('#reasonDescriptionEng').val()
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: "CancelReasons.aspx/Update",
+                data: jsonText,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                timeout: 360000,
+                success: function (response) {
+                    if (response.d == "") {
+                        //mostrar el id de la orden y cualquier otra informacion;
+                    }
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('Ocurrio un error al registar la orden');
+                }
+            });
+        });
+        //fin post a aspx.cs
 
         function cargarMenu() {
             $.ajax({

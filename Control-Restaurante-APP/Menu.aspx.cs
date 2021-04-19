@@ -40,7 +40,47 @@ namespace Control_Restaurante_APP.Views
                 return null;
             }
         }
-
     }
+
+    //Para hacer post con la informacion enviada desde JavaScript
+    /*
+    [System.Web.Services.WebMethod(EnableSession = true)]
+    public static string Update(string pkReason, string internalName, string descriptionSPA, string descriptionENG)
+    {
+        try
+        {
+            if (!pkReason.IsNullOrEmpty() && !internalName.IsNullOrEmpty() && !descriptionSPA.IsNullOrEmpty() && !descriptionENG.IsNullOrEmpty())
+            {
+                Aeropost.Framework.Model.OMG.ItemCancelledReason request = new Aeropost.Framework.Model.OMG.ItemCancelledReason
+                {
+                    Pk_Catalogue = pkReason.ToInt(),
+                    InternalName = internalName,
+                    DescriptionSPA = descriptionSPA,
+                    DescriptionENG = descriptionENG
+                };
+
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, cert, chain, errors) => true);
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["URL_OMG"]);
+                    var result = client.PostAsJsonAsync("api/Item/updateReason", request).Result;
+
+                    string response = result.Content.ReadAsAsync<string>().Result;
+                    if (!response.IsNullOrEmpty())
+                    {
+                        throw new Exception(response);
+                    }
+                    return "";
+                }
+            }
+            else throw new Exception("Empty fields: Could not save motive.");
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+    }//Fin metodo
+    */
 }
 
