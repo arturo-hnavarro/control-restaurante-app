@@ -9,10 +9,10 @@ namespace Control_Restaurante_APP.Modelos
     {
         public int id { get; set; }
         public string createAt { get; set; }
-        public object mesa { get; set; }
-        public object cliente { get; set; }
+        public Mesa mesa { get; set; }
+        public string cliente { get; set; }
         public float total { get; set; }
-        public EstadoPlatillo estadoPlatillo { get; set; }
+        public EstadoOrden estadoOrden { get; set; }
         public List<Item> items { get; set; }
 
     }

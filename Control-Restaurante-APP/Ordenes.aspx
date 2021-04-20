@@ -43,6 +43,8 @@
             function irAMenu() {
                 window.open("Menu.aspx", "_self");
             }
+
+            
             function cargarOrdenes() {
                 $.ajax({
                     type: 'POST',
@@ -62,9 +64,10 @@
                 template += '<div class="row border">';
                 template += '<div class="col order-5">';
                 template += '<div class="col-sm">';
-                template += '<div class="p-2 mb-2 bg-primary text-white">';
+                template += '<div class="p-2 mb-2 bg-[[COLOR_CABECERA]] text-white">';
                 template += '<caption>Orden numero:[[ORDEN_NUMERO]]</caption>';
                 template += ' [[ESTADO_ORDEN]]</div >';
+                template += ' <div>Mesa: [[MESA_ORDEN]]</div >';
                 template += '<table class="table table-sm border">';
                 template += '<thead>';
                 template += '<tr>';
@@ -77,7 +80,7 @@
                 template += '[[NUEVO_ITEM]]';
                 template += '</tbody>';
                 template += '</table>';
-                template += '<button type="button" class="btn [[TIPO_BTN]] p-2">Marcar como completada</button>';
+                template += '<button type="button" class="btn [[TIPO_BTN]] p-2" onclick="cambiarEstadoOrden([[ID]])">[[TEXTO_BTN]]</button>';
                 template += '</div >';
                 template += '</br >';
                 template += '</div >';
@@ -91,8 +94,12 @@
                 for (var i = 0; i < response.length; i++) {
                     let orden = obtenerOrdenTemplate();
                     orden = orden.replace("[[ORDEN_NUMERO]]", response[i].id);
-                    orden = orden.replace("[[ESTADO_ORDEN]]", response[i].estadoPlatillo.descripcion);
+                    orden = orden.replace("[[ESTADO_ORDEN]]", response[i].estadoOrden.descripcion);
+                    orden = orden.replace("[[ID]]", response[i].id);
+                    orden = orden.replace("[[COLOR_CABECERA]]", response[i].estadoOrden.nombre);
                     orden = orden.replace("[[TIPO_BTN]]", "btn-success");
+                    orden = orden.replace("[[TEXTO_BTN]]", "Cambiar Estado");
+                    orden = orden.replace("[[MESA_ORDEN]]", response[i].mesa.id);
                     let listItems = "";
                     for (var j = 0; j < response[i].items.length; j++) {
                         let item = obtenerItemTemplate();
@@ -108,7 +115,12 @@
 
                 $("#ordenes").html(listBody);
             }
-
+            function obtenerColorCabecera(estado) {
+                if (estado == 3)
+                    return "warning";
+                if (estado == 4)
+                    return "primary"
+            }
             function obtenerItemTemplate() {
                 var template = '<tr>';
                 template += '<th scope="row">[[ITEM_NUMERO]]</th>';
@@ -118,6 +130,10 @@
 
                 return template;
             }
+            function cambiarEstadoOrden(id) {
+
+            }
+
             function mostrarItemOrden() {
 
                 $("#itemLista").html(listBody);

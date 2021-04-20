@@ -136,18 +136,22 @@
         function irAOrdenes() {
             window.open("Ordenes.aspx", "_self");  
         }
-        //Para hacer post a archivo .aspx.cs
-        //update
-        $("body").on("click", "#btn_crearordencarrito", function hola(e) {
+        
+        function calcularTotalCarrito(carrito) {
             let totalCarrito = 0;
-            var platillosCarro = JSON.parse(localStorage.getItem(LocalStorageCarrito));
-            if (platillosCarro !== null) {
-                for (var i = 0; i < platillosCarro.length; i++) {
-                    if (platillosCarro[i].Platillo !== undefined) {
-                        totalCarrito += platillosCarro[i].Platillo.precio * platillosCarro[i].Cantidad;
+            if (carrito !== null) {
+                for (var i = 0; i < carrito.length; i++) {
+                    if (carrito[i].Platillo !== undefined) {
+                        totalCarrito += carrito[i].Platillo.precio * carrito[i].Cantidad;
                     }
                 }
             }
+            return totalCarrito;
+        }
+        //Para hacer post a archivo .aspx.cs
+        $("body").on("click", "#btn_crearordencarrito", function hola(e) {
+            var platillosCarro = JSON.parse(localStorage.getItem(LocalStorageCarrito));
+            let totalCarrito = calcularTotalCarrito(platillosCarro);
             var jsonData = JSON.stringify({
                 idMesa: 1,
                 cliente: "Nombre Cliente",

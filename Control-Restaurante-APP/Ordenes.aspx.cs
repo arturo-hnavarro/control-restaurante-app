@@ -21,7 +21,7 @@ namespace Control_Restaurante_APP
         {
             try
             {
-                using(var client = new HttpClient())
+                using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(ConfigurationManager.AppSettings["restaurante-api"]);
                     var result = client.GetAsync("api/ordenes").Result;
@@ -29,10 +29,34 @@ namespace Control_Restaurante_APP
                     return ordenes;
                 }
 
-            }catch
+            }
+            catch
             {
                 return null;
             }
+        }
+        [System.Web.Services.WebMethod]
+        public static String EditarOrden(int idOrden, int idEstado)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    OrdenDTO response = null;
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["restaurante-api"]);
+                    var result = client.PutAsync("api/ordenes/editar_por_id?id=" + idOrden + "&estadoId=" + idEstado, null).Result;
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        response = result.Content.ReadAsAsync<OrdenDTO>().Result;
+                        return $"Se cambio el estado de la orden {response.id} a {response.estadoOrden.descripcion}";
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+            return null;
         }
     }
 }
