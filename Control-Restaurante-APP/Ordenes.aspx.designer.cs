@@ -7,11 +7,20 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Control_Restaurante_APP.Views
+namespace Control_Restaurante_APP
 {
 
 
-    public partial class Menu
+    public partial class Ordenes
     {
+
+        /// <summary>
+        /// Control form1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
     }
 }

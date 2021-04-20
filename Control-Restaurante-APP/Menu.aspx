@@ -24,8 +24,8 @@
                         <h2>Menú</h2>
                     </a>
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                        <!--<li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-                        <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+                       <!-- <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+                        <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
                         <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
                         <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                         <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
@@ -33,7 +33,7 @@
 
                     <div class="text-end">
                         <button type="button" onclick="mostarListaArticulos()" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#carritoModal">Carrito</button>
-                        <button type="button" class="btn btn-warning">Ordenar</button>
+                        <button type="button" onclick="irAOrdenes()" class="btn btn-warning">Ordenes</button>
                     </div>
                 </div>
             </div>
@@ -56,8 +56,8 @@
                 </div>
                 <p class="text-center" id="totalCarrito"></p>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarCarritoModal">Borrar carrito</button>
-                    <button type="button" class="btn btn-primary">Realizar orden</button>
+                    <button type="button" id="btn_borrar_carrito" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarCarritoModal">Borrar carrito</button>
+                    <button type="button" id="btn_crear_orden" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#crearOrdenModal">Realizar orden</button>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
         </div>
     </div>
     <div class="modal fade" id="borrarCarritoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="3" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog  modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Desea eliminar los platillos del carrito?</h5>
@@ -92,6 +92,20 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="crearOrdenModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="4" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ordenBackdropLabel">¿Desea crear la orden?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#alertaModal" id="btn_crearordencarrito">Sí</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Fin menu -->
 
@@ -100,30 +114,61 @@
 
         window.onload = cargarMenu();
 
+        var myModalEl = document.getElementById('carritoModal')
+        myModalEl.addEventListener('show.bs.modal', function (event) {
+            if (JSON.parse(localStorage.getItem(LocalStorageCarrito)) == null) {
+                $("#btn_crear_orden").addClass("disabled");
+                $("#btn_borrar_carrito").addClass("disabled");
+            } else {
+                $("#btn_crear_orden").removeClass("disabled");
+                $("#btn_borrar_carrito").removeClass("disabled");
+            }
+        });
+
+        function crearAlerta(titulo, estado, cuerpo) {
+            $("#alertaModalHeader").removeClass("alert alert-danger");
+            $("#alertaModalHeader").removeClass("alert alert-success");
+            $("#tituloModalAlertaLabel").text(titulo);
+            $("#alertaModalHeader").addClass(estado);
+            $("#alertaModalBody").html(cuerpo);
+        }
+
+        function irAOrdenes() {
+            window.open("Ordenes.aspx", "_self");  
+        }
         //Para hacer post a archivo .aspx.cs
-
         //update
-        $("body").on("click", "#btnUpdateReason", function (e) {
-
-            var jsonText = JSON.stringify({
-                pkReason: $('#reasonId').val(),
-                internalName: $('#reasonInternalName').val(),
-                descriptionSPA: $('#reasonDescriptionSpa').val(),
-                descriptionENG: $('#reasonDescriptionEng').val()
+        $("body").on("click", "#btn_crearordencarrito", function hola(e) {
+            let totalCarrito = 0;
+            var platillosCarro = JSON.parse(localStorage.getItem(LocalStorageCarrito));
+            if (platillosCarro !== null) {
+                for (var i = 0; i < platillosCarro.length; i++) {
+                    if (platillosCarro[i].Platillo !== undefined) {
+                        totalCarrito += platillosCarro[i].Platillo.precio * platillosCarro[i].Cantidad;
+                    }
+                }
+            }
+            var jsonData = JSON.stringify({
+                idMesa: 1,
+                cliente: "Nombre Cliente",
+                total: totalCarrito,
+                platillos: platillosCarro
             });
-
             $.ajax({
                 type: 'POST',
-                url: "CancelReasons.aspx/Update",
-                data: jsonText,
+                url: 'Menu.aspx/EnviarOrden',
+                data: jsonData,
                 contentType: "application/json; charset=utf-8",
-                dataType: "json",
                 timeout: 360000,
                 success: function (response) {
-                    if (response.d == "") {
-                        //mostrar el id de la orden y cualquier otra informacion;
+                    if (response.d != "") {
+                        crearAlerta("Estado de orden", "alert alert-success", response.d);
+                        localStorage.setItem(LocalStorageCarrito, null);
+                    } else {
+                        crearAlerta("Estado de orden", "alert alert-danger", "No se pudo generar la orden.");
+                        localStorage.setItem(LocalStorageCarrito, null);
+                        mostarListaArticulos();
                     }
-
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert('Ocurrio un error al registar la orden');
@@ -234,17 +279,11 @@
                 Platillo: platillo,
                 Cantidad: $("#platillo_cantidad_" + id).val()
             }
-            $("#alertaModalHeader").removeClass("alert alert-danger");
-            $("#alertaModalHeader").removeClass("alert alert-success");
-            if (articuloOrden.Cantidad > 0 && articuloOrden.Cantidad < 10) {
-                $("#tituloModalAlertaLabel").text("Agregado al carrito de compras");
-                $("#alertaModalHeader").addClass("alert alert-success");
-                $("#alertaModalBody").html("Platillo: " + platillo.nombre + " </br> Cantidad: " + articuloOrden.Cantidad);
+            if (articuloOrden.Cantidad > 0 && articuloOrden.Cantidad <= 10) {
+                crearAlerta("Agregado al carrito de compras", "alert alert-success", "Platillo: " + platillo.nombre + " </br> Cantidad: " + articuloOrden.Cantidad);
                 guardarEnLocalStorage(platillos, articuloOrden);
             } else {
-                $("#tituloModalAlertaLabel").text("No se agrego al carrito");
-                $("#alertaModalHeader").addClass("alert alert-danger");
-                $("#alertaModalBody").text("La cantidad debe de estar entre 1 y 10.");
+                crearAlerta("No se agrego al carrito", "alert alert-danger", "La cantidad debe de estar entre 1 y 10.");
             }
         }
 
@@ -262,6 +301,8 @@
         $("body").on("click", "#btn_limpiarcarrito", function (e) {
             localStorage.setItem(LocalStorageCarrito, null);
             mostarListaArticulos();
+            $("#btn_crear_orden").addClass("disabled");
+            $("#btn_borrar_carrito").addClass("disabled");
         });
 
     </script>

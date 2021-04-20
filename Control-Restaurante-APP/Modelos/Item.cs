@@ -5,9 +5,9 @@ using System.Web;
 
 namespace Control_Restaurante_APP.Modelos
 {
-    public class ArticuloOrden
+    public class Item
     {
-        public Platillo Platillo { get; set; }
-        public int Cantidad { get; set; }
+        public Platillo platillo { get; set; }
+        public int cantidad { get; set; }
     }
 }

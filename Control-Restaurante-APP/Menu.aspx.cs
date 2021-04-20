@@ -28,59 +28,52 @@ namespace Control_Restaurante_APP.Views
                 {
                     client.BaseAddress = new Uri(ConfigurationManager.AppSettings["restaurante-api"]);
                     var result = client.GetAsync("api/menu").Result;
-                    List<Platillo>  platillos = result.Content.ReadAsAsync<List<Platillo>>().Result;
-                    
+                    List<Platillo> platillos = result.Content.ReadAsAsync<List<Platillo>>().Result;
+
                     platillos.ForEach(x => x.image = Convert.ToBase64String(x.imageInBytes));
                     platillos.ForEach(x => x.imageInBytes = null);
                     return platillos;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
         }
-    }
-
-    //Para hacer post con la informacion enviada desde JavaScript
-    /*
-    [System.Web.Services.WebMethod(EnableSession = true)]
-    public static string Update(string pkReason, string internalName, string descriptionSPA, string descriptionENG)
-    {
-        try
+        [System.Web.Services.WebMethod]
+        public static string EnviarOrden(int idMesa, string cliente, double total, List<Item> platillos)
         {
-            if (!pkReason.IsNullOrEmpty() && !internalName.IsNullOrEmpty() && !descriptionSPA.IsNullOrEmpty() && !descriptionENG.IsNullOrEmpty())
+            try
             {
-                Aeropost.Framework.Model.OMG.ItemCancelledReason request = new Aeropost.Framework.Model.OMG.ItemCancelledReason
+                if (platillos != null)
                 {
-                    Pk_Catalogue = pkReason.ToInt(),
-                    InternalName = internalName,
-                    DescriptionSPA = descriptionSPA,
-                    DescriptionENG = descriptionENG
-                };
-
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, cert, chain, errors) => true);
-
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["URL_OMG"]);
-                    var result = client.PostAsJsonAsync("api/Item/updateReason", request).Result;
-
-                    string response = result.Content.ReadAsAsync<string>().Result;
-                    if (!response.IsNullOrEmpty())
+                    OrdenDTO response = null;
+                    Orden request = new Orden
                     {
-                        throw new Exception(response);
+                        mesa = new Mesa { id = idMesa },
+                        cliente = cliente,
+                        total = total,
+                        items = platillos
+                    };
+                    using (var client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(ConfigurationManager.AppSettings["restaurante-api"]);
+                        var result = client.PostAsJsonAsync("api/ordenes/salvar", request).Result;
+
+                        if (result.StatusCode == System.Net.HttpStatusCode.Created)
+                        {
+                            response = result.Content.ReadAsAsync<OrdenDTO>().Result;
+                            return $"Su orden número <strong>{response.id}</strong> fue creada con exito.";
+                        }
                     }
-                    return "";
                 }
             }
-            else throw new Exception("Empty fields: Could not save motive.");
+            catch
+            {
+                return "";
+            }
+            return "";
         }
-        catch (Exception ex)
-        {
-            return ex.Message;
-        }
-    }//Fin metodo
-    */
+    }
 }
 
