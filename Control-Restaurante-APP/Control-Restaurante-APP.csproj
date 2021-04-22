@@ -110,6 +110,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Global.asax" />
+    <Content Include="Login.aspx" />
     <Content Include="Ordenes.aspx" />
     <Content Include="Platillos.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -220,14 +221,23 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modelos\EstadoOrden.cs" />
     <Compile Include="Modelos\Item.cs" />
     <Compile Include="Modelos\EstadoPlatillo.cs" />
     <Compile Include="Modelos\Ingrediente.cs" />
+    <Compile Include="Modelos\LoginDTO.cs" />
     <Compile Include="Modelos\Mesa.cs" />
     <Compile Include="Modelos\Orden.cs" />
     <Compile Include="Modelos\OrdenDTO.cs" />
     <Compile Include="Modelos\Platillo.cs" />
+    <Compile Include="Modelos\Rol.cs" />
     <Compile Include="Modelos\TipoPlato.cs" />
     <Compile Include="Ordenes.aspx.cs">
       <DependentUpon>Ordenes.aspx</DependentUpon>

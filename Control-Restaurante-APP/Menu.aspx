@@ -168,10 +168,13 @@
         }
         //Para hacer post a archivo .aspx.cs
         $("body").on("click", "#btn_crearordencarrito", function (e) {
+            const valores = window.location.search;
+            const urlParams = new URLSearchParams(valores);
+            var mesa = urlParams.get('mesa');
             var platillosCarro = JSON.parse(sessionStorage.getItem(SessionStorageCarrito));
             let totalCarrito = calcularTotalCarrito(platillosCarro);
             var jsonData = JSON.stringify({
-                idMesa: 1,
+                idMesa: mesa,
                 cliente: "Nombre Cliente",
                 total: totalCarrito,
                 platillos: platillosCarro
