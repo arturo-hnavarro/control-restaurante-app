@@ -129,18 +129,31 @@ namespace Control_Restaurante_APP
             
             if (!String.IsNullOrEmpty(id))
                 platillo.id = Int32.Parse(id);
-            
+
+            if (String.IsNullOrEmpty(nombre))
+                throw new ArgumentNullException();
             platillo.nombre = nombre;
+
+            if (String.IsNullOrEmpty(precio))
+                throw new ArgumentNullException();
             platillo.precio = float.Parse(precio);
+
+            if (String.IsNullOrEmpty(tipoPlato))
+                throw new ArgumentNullException();
             platillo.tipoPlato = new TipoPlato()
             {
                 id = Int32.Parse(tipoPlato)
             };
+
+            if (String.IsNullOrEmpty(estadoPlatillo))
+                throw new ArgumentNullException();
             platillo.estadoPlatillo = new EstadoPlatillo()
             {
                 id = Int32.Parse(estadoPlatillo)
             };
 
+            if (ingredientes.Count == 0)
+                throw new ArgumentNullException();
             Ingrediente[] ingredientesList = new Ingrediente[ingredientes.Count];
             for (int i=0; i< ingredientes.Count; i++)
             {
@@ -150,6 +163,9 @@ namespace Control_Restaurante_APP
                 });
             }
             platillo.ingredientes = ingredientesList;
+            
+            if (String.IsNullOrEmpty(imagePath))
+                throw new ArgumentNullException();
             platillo.image= imagePath;
             return platillo;
         }
