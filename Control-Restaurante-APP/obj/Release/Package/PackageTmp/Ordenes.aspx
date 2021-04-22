@@ -23,7 +23,6 @@
 
                     <div class="text-end">
                         <button type="button" onclick="irAMenu()" class="btn btn-warning">Menú</button>
-                        <button type="button" onclick="cerrarSesion()" class="btn btn-link">Cerrar sesión</button>
                     </div>
                 </div>
             </div>
@@ -45,18 +44,18 @@
             </div>
         </div>
 
-          <div class="modal fade" id="facturarModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="4" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ordenBackdropLabel">¿Desea facturar la orden?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div id="confirmarFacturacionFooter" class="modal-footer">
+        <div class="modal fade" id="facturarModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="4" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ordenBackdropLabel">¿Desea facturar la orden?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="confirmarFacturacionFooter" class="modal-footer">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
         <form id="form1" runat="server">
             <div class="container">
@@ -68,7 +67,7 @@
 
         <script type="text/javascript">
 
-            window.onload = cargarOrdenes();
+            window.onload = cargarPagina();
 
             function irAMenu() {
                 window.open("Menu.aspx", "_self");
@@ -77,6 +76,14 @@
             function cerrarSesion() {
                 document.cookie = "usuario=;expires = Thu, 01 Jan 1970 00: 00: 00 UTC; path = /;";
                 window.open("Login.aspx", "_self");
+            }
+
+            function cargarPagina() {
+                if (document.cookie != "" && getCookie("usuario") != "") {
+                    cargarOrdenes();
+                } else {
+                    window.open("Login.aspx", "_self");
+                }
             }
 
             function getCookie(cname) {
@@ -189,7 +196,7 @@
                     if (response[i].estadoOrden.id > visibilidadXRolMin() && response[i].estadoOrden.id < visibilidadXRolMax()) {
                         let orden = obtenerOrdenTemplate();
                         orden = orden.replace("[[ORDEN_NUMERO]]", response[i].id);
-                        orden = orden.replace("[[TOTAL_ORDEN]]", (response[i].estadoOrden.id >= 3 ? "Total Orden: ₡"+response[i].total : ""));
+                        orden = orden.replace("[[TOTAL_ORDEN]]", (response[i].estadoOrden.id >= 3 ? "Total Orden: ₡" + response[i].total : ""));
                         orden = orden.replace("[[ESTADO_ORDEN]]", response[i].estadoOrden.descripcion);
                         orden = orden.replace("[[COLOR_CABECERA]]", response[i].estadoOrden.nombre);
                         orden = orden.replaceAll("[[ID]]", response[i].id);
@@ -297,13 +304,12 @@
 
             function facturarOrden(id, idEstado) {
                 let footer = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>'
-                footer += '<button type="button" class="btn btn-warning" onclick="cambiarEstadoOrden(' + id + ',' + idEstado+')" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#alertaModal" id="btn_facturarOrden">Sí</button>'
+                footer += '<button type="button" class="btn btn-warning" onclick="cambiarEstadoOrden(' + id + ',' + idEstado + ')" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#alertaModal" id="btn_facturarOrden">Sí</button>'
                 $("#confirmarFacturacionFooter").append(footer)
 
             }
 
             function mostrarItemOrden() {
-
                 $("#itemLista").html(listBody);
             }
         </script>

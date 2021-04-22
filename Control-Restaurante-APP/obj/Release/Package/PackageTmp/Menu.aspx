@@ -23,17 +23,16 @@
                     <a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                         <h2>Menú</h2>
                     </a>
-                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                        <!--<li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-                        <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-                        <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-                        <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                        <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
-                    </ul>
-
-                    <div class="text-end">
+                        <ul class="nav col-16 col-lg-auto me-lg-auto mb-10 justify-content-center mb-md-0">
+                            <li><a href="/ordenes.aspx" class="nav-link px-2 text-white">Ordenes</a></li>
+                            <li><a href="/inventario.aspx" class="nav-link px-2 text-white">Inventario</a></li>
+                            <li><a href="/platillos.aspx" class="nav-link px-2 text-white">Platillos</a></li>
+                            <li><a href="/tipoplatillos.aspx" class="nav-link px-2 text-white">Tipo de platillos</a></li>
+                        <!--<li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
+                        </ul>
+                    <div class="text-end" id="finalCabecera">
                         <button type="button" onclick="mostarListaArticulos()" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#carritoModal">Carrito</button>
-                        <button type="button" onclick="irAOrdenes()" class="btn btn-warning">Ordenes</button>
+
                     </div>
                 </div>
             </div>
@@ -125,6 +124,16 @@
             }
         });
 
+        function irALogin() {
+            window.open("Login.aspx", "_self");
+        }
+
+
+        function cerrarSesion() {
+            document.cookie = "usuario=;expires = Thu, 01 Jan 1970 00: 00: 00 UTC; path = /;";
+            location.reload();
+        }
+
         function crearAlerta(titulo, estado, cuerpo) {
             $("#alertaModalHeader").removeClass("alert alert-danger");
             $("#alertaModalHeader").removeClass("alert alert-success");
@@ -166,11 +175,16 @@
             }
             return totalCarrito;
         }
-        //Para hacer post a archivo .aspx.cs
-        $("body").on("click", "#btn_crearordencarrito", function (e) {
+
+        function obtenerUrlParametro(parametro) {
             const valores = window.location.search;
             const urlParams = new URLSearchParams(valores);
-            var mesa = urlParams.get('mesa');
+            return urlParams.get(parametro);
+
+        }
+        //Para hacer post a archivo .aspx.cs
+        $("body").on("click", "#btn_crearordencarrito", function (e) {
+            var mesa = obtenerUrlParametro('mesa');
             var platillosCarro = JSON.parse(sessionStorage.getItem(SessionStorageCarrito));
             let totalCarrito = calcularTotalCarrito(platillosCarro);
             var jsonData = JSON.stringify({
@@ -203,6 +217,7 @@
         //fin post a aspx.cs
 
         function cargarMenu() {
+            btnLogeo();
             $.ajax({
                 type: 'POST',
                 url: "Menu.aspx/CargarMenu",
@@ -321,6 +336,16 @@
                 nuevosPlatillo.push(articuloOrden);
                 sessionStorage.setItem(SessionStorageCarrito, JSON.stringify(nuevosPlatillo));
             }
+        }
+
+        function btnLogeo() {
+            let btn = '';
+            if (document.cookie != "" && getCookie("usuario") != "") {
+                btn = '<button type="button" onclick="cerrarSesion()" class="btn btn-danger">Cerrar Sesión</button>';
+            } else {
+                btn = '<button type="button" onclick="irALogin()"  class="btn btn-warning">Login</button>';
+            }
+            $("#finalCabecera").append(btn);
         }
 
         $("body").on("click", "#btn_limpiarcarrito", function (e) {

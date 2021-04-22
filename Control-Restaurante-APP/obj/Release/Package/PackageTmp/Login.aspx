@@ -40,8 +40,6 @@
                         <input type="password" class="form-control" id="passwordInput">
                     </div>
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">Recordarme</label>
                     </div>
                     <button type="button" class="btn btn-primary" id="btn_acceder" data-bs-toggle="modal" data-bs-target="#alertaModal">Acceder</button>
                 </form>
@@ -66,6 +64,8 @@
 
         <script type="text/javascript">
 
+            window.onload = cargarPagina();
+
             function crearAlerta(titulo, estado, cuerpo) {
                 $("#alertaModalHeader").removeClass("alert alert-danger");
                 $("#alertaModalHeader").removeClass("alert alert-success");
@@ -76,6 +76,27 @@
 
             function irAMenu() {
                 window.open("Menu.aspx", "_self");
+            }
+
+            function cargarPagina() {
+                if (document.cookie != "" && getCookie("usuario") != "") {
+                    window.open("Menu.aspx", "_self");
+                }
+            }
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
             }
 
             $("body").on("click", "#btn_acceder", function (e) {
@@ -93,7 +114,7 @@
                         if (response.d !== null) {
                             crearAlerta("Login", "alert alert-success", "Ingreso.</br>" + response.d.user.nombre);
                             document.cookie = "usuario="+crearJSONUsuario(response);
-                            window.open("Ordenes.aspx", "_self");
+                            window.open("Menu.aspx", "_self");
                         } else {
                             crearAlerta("Login", "alert alert-danger", 'Datos errones.');
                         }

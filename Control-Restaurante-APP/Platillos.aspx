@@ -63,8 +63,9 @@
         var catalogoIngredientes = [];
 
         function irAMenu() {
-            window.open("Menu.aspx", "_self");
+            window.open("Menu.aspx?mesa=" + getCookie('mesa'), "_self");
         }
+
         $(document).ready(function () {
 
             window.onload = loadDefaulValues();
