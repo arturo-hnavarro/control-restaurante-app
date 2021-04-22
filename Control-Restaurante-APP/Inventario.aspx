@@ -22,7 +22,7 @@
                     </ul>
 
                     <div class="text-end">
-                        <button type="button" onclick="irAMenu()" class="btn btn-warning">Menú</button>
+                        <button type="button" onclick="location.href='menu.aspx'" class="btn btn-warning">Menú</button>
                     </div>
                 </div>
             </div>
@@ -61,10 +61,9 @@
 
     <script type="text/javascript">
 
-        function irAMenu() {
-            window.open("Menu.aspx", "_self");
-        }
+
         $(document).ready(function () {
+
             window.onload = loadDefaulValues();
 
             $("body").on("click", "#nuevoProducto", function (e) {
@@ -100,7 +99,26 @@
         }
 
         function loadDefaulValues() {
-            cargarInventario();
+            if (document.cookie != "" && getCookie("usuario") != "") {
+                cargarInventario();
+            } else {
+                window.open("Login.aspx", "_self");
+            }
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
         }
 
         function cargarInventario() {
