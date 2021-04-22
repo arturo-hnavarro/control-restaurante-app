@@ -110,6 +110,7 @@
 
     <script type="text/javascript">
         var SessionStorageCarrito = 'carrito';
+        var SessionStorageMesa = 'mesa';
 
         window.onload = cargarMenu();
 
@@ -205,7 +206,6 @@
                         sessionStorage.setItem(SessionStorageCarrito, null);
                     } else {
                         crearAlerta("Estado de orden", "alert alert-danger", "No se pudo generar la orden.");
-                        sessionStorage.setItem(SessionStorageCarrito, null);
                         mostarListaArticulos();
                     }
                 },
@@ -217,6 +217,7 @@
         //fin post a aspx.cs
 
         function cargarMenu() {
+            document.cookie = "mesa="+obtenerUrlParametro('mesa')+";";
             btnLogeo();
             $.ajax({
                 type: 'POST',
@@ -337,6 +338,7 @@
                 sessionStorage.setItem(SessionStorageCarrito, JSON.stringify(nuevosPlatillo));
             }
         }
+        
 
         function btnLogeo() {
             let btn = '';

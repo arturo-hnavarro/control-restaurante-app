@@ -75,12 +75,12 @@
             }
 
             function irAMenu() {
-                window.open("Menu.aspx", "_self");
+                    window.open("Menu.aspx?mesa=" + getCookie('mesa'), "_self");
             }
 
             function cargarPagina() {
                 if (document.cookie != "" && getCookie("usuario") != "") {
-                    window.open("Menu.aspx", "_self");
+                    window.open("Menu.aspx?mesa=" + getCookie('mesa'), "_self");
                 }
             }
 
@@ -114,7 +114,7 @@
                         if (response.d !== null) {
                             crearAlerta("Login", "alert alert-success", "Ingreso.</br>" + response.d.user.nombre);
                             document.cookie = "usuario="+crearJSONUsuario(response);
-                            window.open("Menu.aspx", "_self");
+                            window.open("Menu.aspx?mesa=" + getCookie('mesa'), "_self");
                         } else {
                             crearAlerta("Login", "alert alert-danger", 'Datos errones.');
                         }
