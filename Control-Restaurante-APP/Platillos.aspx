@@ -124,7 +124,7 @@
                     if (response != "")
                         mostrarListaPlatillos(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('No fue posible cargar la información del platillo. Por favor intente de nuevo', '2');
                 }
             });
         }
@@ -149,23 +149,6 @@
             template += '</table>';
             return template;
         }
-
-        /*function obtenerTablaTipoPlatilloTemplate() {
-            var template = '<table class="table table-striped table-hover">';
-            template += '<thead>';
-            template += '<tr>';
-            template += '<th scope="col">Id</th>';
-            template += '<th scope="col">Nombre</th>';
-            template += '<th scope="col">Descripcion</th>';
-            template += '<th scope="col">Acciones</th>';
-            template += '</tr>';
-            template += '</thead>';
-            template += '<tbody id="itemPlatilloLista">';
-            template += '[[NUEVO_ITEM]]';
-            template += '</tbody>';
-            template += '</table>';
-            return template;
-        }*/
 
         function obtenerPlatilloTemplate() {
             var template = '<tr>';
@@ -225,23 +208,6 @@
 
             return template;
         }
-
-        /*function mostrarListaTipoPlatillos() {
-            let table = obtenerTablaTipoPlatilloTemplate();
-            let tipos = obtenerTipos();
-            let listBody = "";
-            for (var i = 0; i < tipos.length; i++) {
-                let tipo = obtenerPlatilloTemplate();
-                tipo = tipo.replace("[[ID]]", tipos[i].id);
-                tipo = tipo.replace("[[NOMBRE]]", tipos[i].nombre);
-                tipo = tipo.replace("[[DESCRIPCION]]", tipos[i].precio);
-                platillo = platillo.replace("[[ACCIONES]]", '<div class="d-grid gap-2"><button class= "btn btn-primary" onclick="verDetallePlatillo(' + tipos[i].id + ')" type = "button" data-bs-toggle="modal" data-bs-target="#modalPlatilloDetalle""> Editar </button></div >');
-
-                listBody += platillo;
-            }
-            table = table.replace("[[NUEVO_ITEM]]", listBody);
-            $("#tiposDePlatillos").html(table);
-        }*/
 
         function mostrarListaPlatillos(response) {
             let table = obtenerTablaPlatilloTemplate();
@@ -380,10 +346,10 @@
                 data: jsonData,
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    if (response != "")
+                    if (response != null)
                         alert(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('No fue posible guardar la información del platillo. Por favor intente de nuevo', '2');
                 }
             });
         }
@@ -399,10 +365,10 @@
                 data: jsonData,
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    if (response != "")
+                    if (response != null)
                         mostrarDetallePlatillo(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('No fue posible cargar la información del platillo. Por favor intente de nuevo', '2');
                 }
             });
         }
@@ -416,7 +382,7 @@
                     if (response != "")
                         cargarEstadosEnMemoria(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('No fue posible cargar estados de los platillos. Por favor intente de nuevo', '2');
                 }
             });
         }
@@ -430,7 +396,7 @@
                     if (response != "")
                         cargarTiposEnMemoria(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('No fue posible cargar tipos de platillos. Por favor intente de nuevo', '2');
                 }
             });
         }
@@ -444,7 +410,7 @@
                     if (response != "")
                         cargarCatalogoEnMemoria(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DEL CATALOGO DE PRODUCTOS');
+                        showAlert('No fue posible cargar el catalogo de ingredientes. Por favor intente de nuevo', '2');
                 }
             });
         }

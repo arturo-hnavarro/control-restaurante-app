@@ -93,7 +93,7 @@
                     if (response != null)
                         mostrarListaTiposPlatillos(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('Problemas al cargar información del tipo de platillos. Por favor intente de nuevo', '2');
                 }
             });
         }
@@ -124,7 +124,6 @@
                 tipo = tipo.replace("[[NOMBRE]]", tipos[i].nombre);
                 tipo = tipo.replace("[[DESCRIPCION]]", tipos[i].descripcion);
                 tipo = tipo.replace("[[ACCIONES]]", '<div class="d-grid gap-2"><button class= "btn btn-primary" onclick="verDetalleTipoPlatillo(' + tipos[i].id + ')" type = "button" data-bs-toggle="modal" data-bs-target="#modalTipoPlatillo"> Editar </button></div >');
-
                 listBody += tipo;
             }
             table = table.replace("[[NUEVO_ITEM]]", listBody);
@@ -176,7 +175,7 @@
                     if (response != null)
                         mostrarDetalleTipoPlatillo(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('Problemas al cargar información del tipo de platillo. Por favor intente de nuevo', '2');
                 }
             });
         }
