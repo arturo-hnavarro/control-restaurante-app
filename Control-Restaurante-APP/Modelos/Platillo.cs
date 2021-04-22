@@ -13,6 +13,7 @@ namespace Control_Restaurante_APP.Modelos
         public float precio { get; set; }
         public string createAt { get; set; }
         public string image { get; set; }
+        public string imagePath { get; set; }
         public byte[] imageInBytes { get; set; }
         public Ingrediente[] ingredientes { get; set; }
         public EstadoPlatillo estadoPlatillo { get; set; }

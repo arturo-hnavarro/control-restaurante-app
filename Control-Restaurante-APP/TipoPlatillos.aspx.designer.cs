@@ -11,7 +11,7 @@ namespace Control_Restaurante_APP
 {
 
 
-    public partial class Ordenes
+    public partial class TipoPlatillos
     {
     }
 }

@@ -111,6 +111,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Ordenes.aspx" />
+    <Content Include="Platillos.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -211,6 +212,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Menu.aspx" />
+    <Content Include="TipoPlatillos.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +236,13 @@
     <Compile Include="Ordenes.aspx.designer.cs">
       <DependentUpon>Ordenes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Platillos.aspx.cs">
+      <DependentUpon>Platillos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Platillos.aspx.designer.cs">
+      <DependentUpon>Platillos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Menu.aspx.cs">
       <DependentUpon>Menu.aspx</DependentUpon>
@@ -241,6 +250,13 @@
     </Compile>
     <Compile Include="Menu.aspx.designer.cs">
       <DependentUpon>Menu.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TipoPlatillos.aspx.cs">
+      <DependentUpon>TipoPlatillos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TipoPlatillos.aspx.designer.cs">
+      <DependentUpon>TipoPlatillos.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

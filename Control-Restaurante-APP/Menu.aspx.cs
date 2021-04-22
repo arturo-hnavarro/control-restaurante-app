@@ -30,8 +30,15 @@ namespace Control_Restaurante_APP.Views
                     var result = client.GetAsync("api/menu").Result;
                     List<Platillo> platillos = result.Content.ReadAsAsync<List<Platillo>>().Result;
 
-                    platillos.ForEach(x => x.image = Convert.ToBase64String(x.imageInBytes));
-                    platillos.ForEach(x => x.imageInBytes = null);
+                    foreach (var item in platillos)
+                    {
+                        try
+                        {
+                            item.imagePath = item.image;
+                            item.image = Convert.ToBase64String(item.imageInBytes);
+                            item.imageInBytes = null;
+                        }catch { }
+                    }
                     return platillos;
                 }
             }
