@@ -196,7 +196,7 @@
                     }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert('Ocurrio un error al registar la orden');
+                    crearAlerta("Estado de orden", "alert alert-danger", "Ocurrio un error al registar la orden");
                 }
             });
         });
