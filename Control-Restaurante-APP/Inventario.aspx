@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TipoPlatillos.aspx.cs" Inherits="Control_Restaurante_APP.TipoPlatillos" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Inventario.aspx.cs" Inherits="Control_Restaurante_APP.Inventario" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Tipos de platillos</title>
+    <title>Inventario</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <script src="Scripts/jquery-3.0.0.min.js"></script>
@@ -16,7 +16,7 @@
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                        <h2>Administración de Tipos de Platillos</h2>
+                        <h2>Administración de Inventario</h2>
                     </a>
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     </ul>
@@ -34,29 +34,30 @@
         <form id="form1">
             <div class="container">
                 <br />
-                <button id="nuevoPlatillo" class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalTipoPlatillo">Agregar nuevo tipo</button>
-                <br />
-
-                <div id="tiposDePlatillos" class="row">
+                <button id="nuevoProducto" class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalProducto">Agregar nuevo producto</button>
+                <br /><br />
+                <div id="productos" class="row">
                 </div>
             </div>
         </form>
     </div>
-    <div class="modal fade" id="modalTipoPlatillo" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="modalProducto" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="tituloModalLabel">Detelle del tipo de platillo</h5>
+                    <h5 class="modal-title" id="tituloModalLabel">Detelle del producto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="modalTipoPlatilloBodyDetalle">
+                <div class="modal-body" id="modalProductoBodyDetalle">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn_guardar_tipo_platillo" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#crearOrdenModal">Registrar</button>
+                    <button type="button" id="btn_guardar_producto" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#crearOrdenModal">Registrar</button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <script type="text/javascript">
 
@@ -66,48 +67,31 @@
         $(document).ready(function () {
             window.onload = loadDefaulValues();
 
-            $("body").on("click", "#nuevoPlatillo", function (e) {
-                mostrarDetalleTipoPlatillo('')
+            $("body").on("click", "#nuevoProducto", function (e) {
+                mostrarDetalleProducto('')
             });
 
-            $("body").on("click", "#btn_guardar_tipo_platillo", function (e) {
-                var platillo = JSON.stringify({
-                    id: $("#platilloId").val(),
+            $("body").on("click", "#btn_guardar_producto", function (e) {
+                var producto = JSON.stringify({
+                    id: $("#productoId").val(),
                     nombre: $("#nombreId").val(),
-                    descripcion: $("#descripcionId").val()
+                    cantidad: $("#cantidadId").val()
                 });
-                salvarTipoPlatillo(platillo);
+                salvarProducto(producto);
             });
+
         });
 
-        function loadDefaulValues() {
-            cargarTipoPlatillos();
-        }
-
-        function cargarTipoPlatillos() {
+        function salvarProducto(dataJson) {
             $.ajax({
                 type: 'POST',
-                url: "Platillos.aspx/GetTipos",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    if (response != null)
-                        mostrarListaTiposPlatillos(response.d);
-                    else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
-                }
-            });
-        }
-
-        function salvarTipoPlatillo(dataJson) {
-            $.ajax({
-                type: 'POST',
-                url: "TipoPlatillos.aspx/Salvar",
+                url: "Inventario.aspx/Salvar",
                 data: dataJson,
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                     if (response.d != null) {
-                        showAlert('Platillo <strong>' + response.d.id + '</strong> guardado correctamente', '1');
-                        cargarTipoPlatillos()
+                        showAlert('Producto <strong>' + response.d.id + '</strong> guardado correctamente', '1');
+                        cargarInventario()
                     }
                     else
                         showAlert('No fue posible guardar la información. Por favor intente de nuevo', '2');
@@ -115,85 +99,103 @@
             });
         }
 
-        function mostrarListaTiposPlatillos(tipos) {
-            let table = obtenerTablaTipoPlatilloTemplate();
-            let listBody = "";
-            for (var i = 0; i < tipos.length; i++) {
-                let tipo = obtenerTipoPlatilloTemplate();
-                tipo = tipo.replace("[[ID]]", tipos[i].id);
-                tipo = tipo.replace("[[NOMBRE]]", tipos[i].nombre);
-                tipo = tipo.replace("[[DESCRIPCION]]", tipos[i].descripcion);
-                tipo = tipo.replace("[[ACCIONES]]", '<div class="d-grid gap-2"><button class= "btn btn-primary" onclick="verDetalleTipoPlatillo(' + tipos[i].id + ')" type = "button" data-bs-toggle="modal" data-bs-target="#modalTipoPlatillo"> Editar </button></div >');
-
-                listBody += tipo;
-            }
-            table = table.replace("[[NUEVO_ITEM]]", listBody);
-            $("#tiposDePlatillos").html(table);
+        function loadDefaulValues() {
+            cargarInventario();
         }
 
-        function obtenerTablaTipoPlatilloTemplate() {
+        function cargarInventario() {
+            $.ajax({
+                type: 'POST',
+                url: "Inventario.aspx/Get",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    if (response != null)
+                        mostrarListaInventario(response.d);
+                    else
+                        alert('PROBLEMAS AL CARGAR INFORMACION DE INVENTARIO');
+                }
+            });
+        }
+
+        function mostrarListaInventario(productos) {
+            let table = obtenerTablaInventarioTemplate();
+            let listBody = "";
+            for (var i = 0; i < productos.length; i++) {
+                let producto = obtenerProductoTemplate();
+                producto = producto.replace("[[ID]]", productos[i].id);
+                producto = producto.replace("[[NOMBRE]]", productos[i].nombre);
+                producto = producto.replace("[[CANTIDAD]]", productos[i].candidadDisponible);
+                producto = producto.replace("[[ACCIONES]]", '<div class="d-grid gap-2"><button class= "btn btn-primary" onclick="verDetalleProducto(' + productos[i].id + ')" type="button" data-bs-toggle="modal" data-bs-target="#modalProducto"> Editar </button></div >');
+
+                listBody += producto;
+            }
+            table = table.replace("[[NUEVO_ITEM]]", listBody);
+            $("#productos").html(table);
+        }
+
+        function obtenerTablaInventarioTemplate() {
             var template = '<table class="table table-striped table-hover">';
             template += '<thead>';
             template += '<tr>';
             template += '<th scope="col">Id</th>';
             template += '<th scope="col">Nombre</th>';
-            template += '<th scope="col">Descripcion</th>';
+            template += '<th scope="col">Cantidad</th>';
             template += '<th scope="col">Acciones</th>';
             template += '</tr>';
             template += '</thead>';
-            template += '<tbody id="itemPlatilloLista">';
+            template += '<tbody id="itemProductoLista">';
             template += '[[NUEVO_ITEM]]';
             template += '</tbody>';
             template += '</table>';
             return template;
         }
 
-        function obtenerTipoPlatilloTemplate() {
+        function obtenerProductoTemplate() {
             var template = '<tr>';
             template += '<th scope="row">[[ID]]</th>';
             template += '<td>[[NOMBRE]]</td>';
-            template += '<td>[[DESCRIPCION]]</td>';
+            template += '<td>[[CANTIDAD]]</td>';
             template += '<td>[[ACCIONES]]</td>';
             template += '</tr>';
             return template;
         }
 
-        function verDetalleTipoPlatillo(id) {
-            buscarTipoPlatillo(id);
+        function verDetalleProducto(id) {
+            buscarProducto(id);
         }
 
-        function buscarTipoPlatillo(id) {
+        function buscarProducto(id) {
             var jsonData = JSON.stringify({
-                idTipo: id
+                idProducto: id
             });
 
             $.ajax({
                 type: 'POST',
-                url: "TipoPlatillos.aspx/BuscarPorId",
+                url: "Inventario.aspx/BuscarPorId",
                 data: jsonData,
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                     if (response != null)
-                        mostrarDetalleTipoPlatillo(response.d);
+                        mostrarDetalleProducto(response.d);
                     else
-                        alert('PROBLEMAS AL CARGAR INFORMACION DE PLATILLOS');
+                        showAlert('Problemas al cargar catalodo de productos, por favor intentar de nuevo.', '2');
                 }
             });
         }
 
-        function mostrarDetalleTipoPlatillo(response) {
-            var platilloForm = obtenerTipoPlatilloFormTemplate();
-            platilloForm = platilloForm.replace("[[ID]]", response != '' ? response.id : '');
-            platilloForm = platilloForm.replace("[[NOMBRE]]", response != '' ? response.nombre : '');
-            platilloForm = platilloForm.replace("[[DESCRIPCION]]", response != '' ? response.descripcion : '');
-            $("#modalTipoPlatilloBodyDetalle").html(platilloForm);
+        function mostrarDetalleProducto(response) {
+            var productoForm = obtenerProductoFormTemplate();
+            productoForm = productoForm.replace("[[ID]]", response != '' ? response.id : '');
+            productoForm = productoForm.replace("[[NOMBRE]]", response != '' ? response.nombre : '');
+            productoForm = productoForm.replace("[[CANTIDAD]]", response != '' ? response.candidadDisponible : '');
+            $("#modalProductoBodyDetalle").html(productoForm);
         }
 
-        function obtenerTipoPlatilloFormTemplate() {
+        function obtenerProductoFormTemplate() {
             var template = '<form>'
             template += '<div class="visually-hidden">'
-            template += '<label for="platilloId" class="form-label">Id</label>'
-            template += '<input type="text" class="form-control" id="platilloId" value="[[ID]]" disabled>'
+            template += '<label for="productoId" class="form-label">Id</label>'
+            template += '<input type="text" class="form-control" id="productoId" value="[[ID]]" disabled>'
             template += '</div>'
 
             template += '<div>'
@@ -202,8 +204,8 @@
             template += '</div>'
 
             template += '<div>'
-            template += '<label for="descripcionId" class="form-label">Descripción</label>'
-            template += '<input type="text" class="form-control" id="descripcionId" value="[[DESCRIPCION]]">'
+            template += '<label for="cantidadId" class="form-label">Cantidad</label>'
+            template += '<input type="text" class="form-control" id="cantidadId" value="[[CANTIDAD]]">'
             template += '</div>'
             template += '</form>'
 
@@ -226,6 +228,7 @@
             }
             $("#alertMessage").html(message)
         }
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>

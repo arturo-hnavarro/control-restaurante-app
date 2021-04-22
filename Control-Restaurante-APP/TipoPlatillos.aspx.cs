@@ -73,6 +73,5 @@ namespace Control_Restaurante_APP
             tipo.descripcion = descripcion;
             return tipo;
         }
-
     }
 }
