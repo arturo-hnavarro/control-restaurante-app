@@ -36,7 +36,7 @@ namespace Control_Restaurante_APP
             }
         }
         [System.Web.Services.WebMethod]
-        public static String EditarOrden(int idOrden, int idEstado)
+        public static OrdenDTO EditarOrden(int idOrden, int idEstado)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Control_Restaurante_APP
                     if (result.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         response = result.Content.ReadAsAsync<OrdenDTO>().Result;
-                        return $"Se cambio el estado de la orden {response.id} a {response.estadoOrden.descripcion}";
+                        return response;
                     }
                 }
             }

@@ -24,7 +24,7 @@
                         <h2>Menú</h2>
                     </a>
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                       <!-- <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+                        <!--<li><a href="#" class="nav-link px-2 text-white">Features</a></li>
                         <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
                         <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
                         <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
@@ -110,13 +110,13 @@
     <!-- Fin menu -->
 
     <script type="text/javascript">
-        var LocalStorageCarrito = 'carrito';
+        var SessionStorageCarrito = 'carrito';
 
         window.onload = cargarMenu();
 
         var myModalEl = document.getElementById('carritoModal')
         myModalEl.addEventListener('show.bs.modal', function (event) {
-            if (JSON.parse(localStorage.getItem(LocalStorageCarrito)) == null) {
+            if (JSON.parse(sessionStorage.getItem(SessionStorageCarrito)) == null) {
                 $("#btn_crear_orden").addClass("disabled");
                 $("#btn_borrar_carrito").addClass("disabled");
             } else {
@@ -134,9 +134,27 @@
         }
 
         function irAOrdenes() {
-            window.open("Ordenes.aspx", "_self");  
+            if (document.cookie != "" && getCookie("usuario") != "") {
+                window.open("Ordenes.aspx", "_self");
+            } else {
+                window.open("Login.aspx", "_self");
+            }
         }
-        
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
         function calcularTotalCarrito(carrito) {
             let totalCarrito = 0;
             if (carrito !== null) {
@@ -149,8 +167,8 @@
             return totalCarrito;
         }
         //Para hacer post a archivo .aspx.cs
-        $("body").on("click", "#btn_crearordencarrito", function hola(e) {
-            var platillosCarro = JSON.parse(localStorage.getItem(LocalStorageCarrito));
+        $("body").on("click", "#btn_crearordencarrito", function (e) {
+            var platillosCarro = JSON.parse(sessionStorage.getItem(SessionStorageCarrito));
             let totalCarrito = calcularTotalCarrito(platillosCarro);
             var jsonData = JSON.stringify({
                 idMesa: 1,
@@ -167,10 +185,10 @@
                 success: function (response) {
                     if (response.d != "") {
                         crearAlerta("Estado de orden", "alert alert-success", response.d);
-                        localStorage.setItem(LocalStorageCarrito, null);
+                        sessionStorage.setItem(SessionStorageCarrito, null);
                     } else {
                         crearAlerta("Estado de orden", "alert alert-danger", "No se pudo generar la orden.");
-                        localStorage.setItem(LocalStorageCarrito, null);
+                        sessionStorage.setItem(SessionStorageCarrito, null);
                         mostarListaArticulos();
                     }
                 },
@@ -204,7 +222,7 @@
                 platillo = platillo.replace("[[TIPO_PLATILLO]]", response[i].tipoPlato.nombre);
                 platillo = platillo.replace("[[NOMBRE_PLATILLO]]", response[i].nombre);
                 platillo = platillo.replace("[[IMAGEN]]", "data:image/jpg;base64," + response[i].image);
-                platillo = platillo.replace("[[PRECIO_PLATILLO]]", "¢" + response[i].precio);
+                platillo = platillo.replace("[[PRECIO_PLATILLO]]", "₡" + response[i].precio);
                 platillo = platillo.replaceAll("[[ID]]", response[i].id);
                 var listaIngredientes = "";
                 for (var j = 0; j < response[i].ingredientes.length; j++) {
@@ -243,21 +261,21 @@
         function mostarListaArticulos() {
             let listBody = "";
             let totalCarrito = 0;
-            var platillos = JSON.parse(localStorage.getItem(LocalStorageCarrito));
+            var platillos = JSON.parse(sessionStorage.getItem(SessionStorageCarrito));
             if (platillos !== null) {
                 for (var i = 0; i < platillos.length; i++) {
                     if (platillos[i].Platillo !== undefined) {
                         let total = platillos[i].Platillo.precio * platillos[i].Cantidad;
                         let articulo = obtenerListaPlatillosTemplate();
                         articulo = articulo.replace("[[NOMBRE_PLATILLO]]", "Platillo: " + platillos[i].Platillo.nombre);
-                        articulo = articulo.replace("[[PRECIO_PLATILLO]]", "Total: ¢" + total);
+                        articulo = articulo.replace("[[PRECIO_PLATILLO]]", "Total: ₡" + total);
                         articulo = articulo.replace("[[CANTIDAD]]", platillos[i].Cantidad);
                         listBody += articulo;
                         totalCarrito += total;
                     }
                 }
             }
-            $("#totalCarrito").text("Total: ¢" + totalCarrito);
+            $("#totalCarrito").text("Total: ₡" + totalCarrito);
             $("#lista").html(listBody);
         }
         function obtenerListaPlatillosTemplate() {
@@ -273,7 +291,7 @@
             return template;
         }
         function agregarArticulo(id) {
-            var platillos = JSON.parse(localStorage.getItem(LocalStorageCarrito));
+            var platillos = JSON.parse(sessionStorage.getItem(SessionStorageCarrito));
             var platillo = {
                 id: id,
                 nombre: $("#platillo_nombre_" + id).text(),
@@ -285,25 +303,25 @@
             }
             if (articuloOrden.Cantidad > 0 && articuloOrden.Cantidad <= 10) {
                 crearAlerta("Agregado al carrito de compras", "alert alert-success", "Platillo: " + platillo.nombre + " </br> Cantidad: " + articuloOrden.Cantidad);
-                guardarEnLocalStorage(platillos, articuloOrden);
+                guardarEnsessionStorage(platillos, articuloOrden);
             } else {
                 crearAlerta("No se agrego al carrito", "alert alert-danger", "La cantidad debe de estar entre 1 y 10.");
             }
         }
 
-        function guardarEnLocalStorage(platillos, articuloOrden) {
+        function guardarEnsessionStorage(platillos, articuloOrden) {
             if (platillos !== null) {
                 platillos.push(articuloOrden);
-                localStorage.setItem(LocalStorageCarrito, JSON.stringify(platillos));
+                sessionStorage.setItem(SessionStorageCarrito, JSON.stringify(platillos));
             } else {
                 var nuevosPlatillo = []
                 nuevosPlatillo.push(articuloOrden);
-                localStorage.setItem(LocalStorageCarrito, JSON.stringify(nuevosPlatillo));
+                sessionStorage.setItem(SessionStorageCarrito, JSON.stringify(nuevosPlatillo));
             }
         }
 
         $("body").on("click", "#btn_limpiarcarrito", function (e) {
-            localStorage.setItem(LocalStorageCarrito, null);
+            sessionStorage.setItem(SessionStorageCarrito, null);
             mostarListaArticulos();
             $("#btn_crear_orden").addClass("disabled");
             $("#btn_borrar_carrito").addClass("disabled");

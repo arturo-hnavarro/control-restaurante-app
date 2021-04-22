@@ -14,6 +14,5 @@ namespace Control_Restaurante_APP.Modelos
         public float total { get; set; }
         public EstadoOrden estadoOrden { get; set; }
         public List<Item> items { get; set; }
-
     }
 }
