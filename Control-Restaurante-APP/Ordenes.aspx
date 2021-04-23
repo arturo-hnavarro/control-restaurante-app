@@ -308,7 +308,7 @@
             let footer = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>'
             footer += '<button type="button" class="btn btn-warning" onclick="cambiarEstadoOrden(' + id + ',' + idEstado + ')" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#alertaModal" id="btn_facturarOrden">Sí</button>'
 
-            $("#confirmarFacturacionFooter").append(footer);
+            $("#confirmarFacturacionFooter").html(footer);
             $("#facturarModalBody").html("Orden: " + id + " </br>Mesa: " + mesa + " </br>Precio de la orden: ₡" + total);
         }
 

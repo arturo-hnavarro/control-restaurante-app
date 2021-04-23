@@ -22,7 +22,7 @@
                     </ul>
 
                     <div class="text-end">
-                        <button type="button" onclick="location.href='menu.aspx'" class="btn btn-warning">Menú</button>
+                        <button type="button" onclick="irAMenu()" class="btn btn-warning">Menú</button>
                     </div>
                 </div>
             </div>
@@ -80,6 +80,10 @@
             });
 
         });
+
+        function irAMenu() {
+            window.open("Menu.aspx?mesa=" + getCookie('mesa'), "_self");
+        }
 
         function salvarProducto(dataJson) {
             $.ajax({
